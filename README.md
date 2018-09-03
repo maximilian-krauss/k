@@ -9,6 +9,7 @@ k is a `kubectl` helper to deal with different kubernetes envionments
 ## Installation
 
 ```bash
+npm install -g the-k
 ```
 
 ## Usage
