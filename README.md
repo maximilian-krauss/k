@@ -33,15 +33,7 @@ k dev e mypod-abcdef -- /bin/sh
 
 ### The kFile
 
-That what's all about.
-
-#### Environments
-
-tbd
-
-#### Shorthands
-
-tbd
+That what's all about. You need to place a `.kfile.json` inside your home directory. See below for an example config.
 
 #### Example .kfile.json
 
