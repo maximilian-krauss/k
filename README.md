@@ -50,6 +50,10 @@ That what's all about. You need to place a `.kfile.json` inside your home direct
     },
     "int": {
       "kubeconfig": "/Users/max/.bluemix/plugins/container-service/clusters/moo-int/moo-int.yml"
+    },
+    "prod": {
+      "kubeconfig": "/Users/max/.bluemix/plugins/container-service/clusters/moo-int/moo-int.yml",
+      "requiresConfirmation": true
     }
   }
 }

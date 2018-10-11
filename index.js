@@ -4,6 +4,7 @@ const execa = require('execa')
 const { join } = require('path')
 const { homedir } = require('os')
 const chalk = require('chalk')
+const prompt = require('prompts')
 
 const { fileExistsAsync, readFileAsJsonAsync } = require('./helper')
 const defaultKFile = require('./default-kfile')
@@ -29,7 +30,7 @@ function expandShorthands (kubeArguments, kFile) {
 }
 
 function parseCommandLineArgsFrom (argv, kFile) {
-  // First to are not needed, since they contain the
+  // First two are not needed, since they contain the
   // executable- and filename
   if (argv.length <= 2) throw new Error('No environment name provided')
 
@@ -52,6 +53,18 @@ const runAsync = async (argv) => {
 
   const environment = kFile.environments[environmentName]
   console.log(chalk.green(`[k] Choosen environment '${environmentName}'`))
+
+  if (environment.requiresConfirmation) {
+    const { confirmed } = await prompt({
+      type: 'confirm',
+      name: 'confirmed',
+      message: `Please confirm the you want to execute "${chalk.blue(kubeArguments.join(' '))}" on ${chalk.red(environmentName)}`,
+      initial: false
+    })
+    if (!confirmed) {
+      return
+    }
+  }
 
   await execa(kubectlExecutable, [ kubectlConfigParameter, environment.kubeconfig, ...kubeArguments ], {
     stderr: process.stderr,
