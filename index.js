@@ -5,6 +5,7 @@ const { join } = require('path')
 const { homedir } = require('os')
 const chalk = require('chalk')
 const prompt = require('prompts')
+const { ConditionalCatch } = require('conditional-catch')
 
 const { fileExistsAsync, readFileAsJsonAsync } = require('./helper')
 const defaultKFile = require('./default-kfile')
@@ -66,15 +67,23 @@ const runAsync = async (argv) => {
     }
   }
 
-  await execa(kubectlExecutable, [ kubectlConfigParameter, environment.kubeconfig, ...kubeArguments ], {
-    stderr: process.stderr,
-    stdin: process.stdin,
-    stdout: process.stdout
-  })
+  try {
+    await execa(kubectlExecutable, [ kubectlConfigParameter, environment.kubeconfig, ...kubeArguments ], {
+      stderr: process.stderr,
+      stdin: process.stdin,
+      stdout: process.stdout
+    })
+  } catch (err) {
+    ConditionalCatch.createFrom(err)
+      .when(e => e.failed, () => {})
+      .handleOrThrow()
+  }
 }
 
 runAsync(process.argv)
   .catch(err => {
     console.error(chalk.red(`[k] errored with: ${err.message}`))
+    console.log(Object.keys(err).join(', '))
+
     process.exit(err.code || 1)
   })

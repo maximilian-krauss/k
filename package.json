@@ -12,6 +12,7 @@
   "license": "MIT",
   "dependencies": {
     "chalk": "^2.4.1",
+    "conditional-catch": "^1.1.0",
     "execa": "^1.0.0",
     "prompts": "^1.1.1"
   },
